@@ -1,0 +1,325 @@
+<?xml version="1.0"?>
+<AlteryxDocument yxmdVer="2021.1">
+  <Nodes>
+    <Node ToolID="1">
+      <GuiSettings Plugin="AlteryxRPluginGui.R">
+        <Position x="366" y="210" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <RScript><![CDATA[
+
+#read data into R tool
+data<-read.Alteryx("#1",mode="data.frame")
+library(jrvFinance)
+
+
+#calculate bondyield for the column of your choice
+variable1 <- data.frame(bond.yield(settle=data[1,1],mature=data[1,2],coupon=data[1,3],price=data[1,5]))
+
+#rename the column
+colnames(variable1)<-c("bondyield")
+
+#combine the new pnorm column back to original dataframe
+output<- cbind(data,variable1)
+
+#output data back into Alteryx
+write.Alteryx(output,1)
+yield_column <-ncol(data)+1
+for (i in 1:nrow(data)) {
+new<- bond.yield(settle=data[i,1],mature=data[i,2],coupon=data[i,3],price=data[i,5],redemption_value=data[i,8])
+data[i,yield_column]<- new
+colnames(data)[ncol(data)] <-paste0("bond_yield")
+}
+
+write.Alteryx(data,5)]]></RScript>
+          <UseFullUpdate value="True" />
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+        <MetaInfo connection="Output1">
+          <RecordInfo>
+            <Field name="Settle" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="Mature" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="Coupon" source="R-DATA:" type="Double" />
+            <Field name="Freq" source="R-DATA:" type="Int32" />
+            <Field name="Price" source="R-DATA:" type="Double" />
+            <Field name="Convention" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="freq2" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="redemption_value" source="R-DATA:" type="Int32" />
+            <Field name="bondyield" source="R-DATA:" type="Double" />
+          </RecordInfo>
+        </MetaInfo>
+        <MetaInfo connection="Output5">
+          <RecordInfo>
+            <Field name="Settle" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="Mature" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="Coupon" source="R-DATA:" type="Double" />
+            <Field name="Freq" source="R-DATA:" type="Int32" />
+            <Field name="Price" source="R-DATA:" type="Double" />
+            <Field name="Convention" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="freq2" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="redemption_value" source="R-DATA:" type="Int32" />
+            <Field name="bond_yield" source="R-DATA:" type="Double" />
+          </RecordInfo>
+        </MetaInfo>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxRPluginEngine.dll" EngineDllEntryPoint="AlteryxR" />
+    </Node>
+    <Node ToolID="2">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.BrowseV2.BrowseV2">
+        <Position x="462" y="54" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <TempFile>C:\Users\micha\AppData\Local\Temp\Engine_29304_00da509b15804a639fa203c7b465c322_\Engine_1760_6d7b456861f14750b90a6c3bb48c2b91_.yxdb</TempFile>
+          <TempFileDataProfiling />
+          <Layout>
+            <ViewMode>Single</ViewMode>
+            <ViewSize value="100" />
+            <View1>
+              <DefaultTab>Profile</DefaultTab>
+              <Hints>
+                <Table />
+              </Hints>
+            </View1>
+            <View2 />
+          </Layout>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxBrowseV2" />
+    </Node>
+    <Node ToolID="3">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.TextInput.TextInput">
+        <Position x="54" y="186" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <NumRows value="3" />
+          <Fields>
+            <Field name="Settle" />
+            <Field name="Mature" />
+            <Field name="Coupon" />
+            <Field name="Freq" />
+            <Field name="Price" />
+            <Field name="Convention" />
+            <Field name="freq" />
+            <Field name="redemption_value" />
+          </Fields>
+          <Data>
+            <r>
+              <c>2012-04-15</c>
+              <c>2022-01-01</c>
+              <c>.08</c>
+              <c>2</c>
+              <c>95</c>
+              <c>30/360</c>
+              <c>2</c>
+              <c>100</c>
+            </r>
+            <r>
+              <c>2012-04-15</c>
+              <c>2022-01-01</c>
+              <c>.08</c>
+              <c>2</c>
+              <c>36</c>
+              <c>30/360</c>
+              <c>2</c>
+              <c>100</c>
+            </r>
+            <r>
+              <c>2020-11-19</c>
+              <c>2024-03-15</c>
+              <c>0.02375</c>
+              <c>2</c>
+              <c>88.017574</c>
+              <c>30/360</c>
+              <c>2</c>
+              <c>100</c>
+            </r>
+          </Data>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxTextInput" />
+    </Node>
+    <Node ToolID="4">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.BrowseV2.BrowseV2">
+        <Position x="582" y="378" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <TempFile>C:\Users\micha\AppData\Local\Temp\Engine_29304_00da509b15804a639fa203c7b465c322_\Engine_1760_293a6d0840aa40a69f150c51a38501e9_.yxdb</TempFile>
+          <TempFileDataProfiling />
+          <Layout>
+            <ViewMode>Single</ViewMode>
+            <ViewSize value="100" />
+            <View1>
+              <DefaultTab>Profile</DefaultTab>
+              <Hints>
+                <Table />
+              </Hints>
+            </View1>
+            <View2 />
+          </Layout>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxBrowseV2" />
+    </Node>
+    <Node ToolID="6">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.MultiFieldFormula.MultiFieldFormula">
+        <Position x="126" y="234" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <FieldType>DateTime</FieldType>
+          <Fields orderChanged="False">
+            <Field name="Settle" />
+            <Field name="Mature" />
+            <Field name="*Unknown" selected="False" />
+          </Fields>
+          <CopyOutput value="False" />
+          <Expression>tostring([_currentfield_])</Expression>
+          <ChangeFieldType value="True" />
+          <OutputFieldType type="V_String" size="10" scale="0" />
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText>tostring([_currentfield_])</DefaultAnnotationText>
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxMultiFieldFormula" />
+    </Node>
+    <Node ToolID="7">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.BrowseV2.BrowseV2">
+        <Position x="222" y="234" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <TempFile>C:\Users\micha\AppData\Local\Temp\Engine_29304_00da509b15804a639fa203c7b465c322_\Engine_1760_887f25bc4b99417db4dea43a8a43cc3e_.yxdb</TempFile>
+          <TempFileDataProfiling />
+          <Layout>
+            <ViewMode>Single</ViewMode>
+            <ViewSize value="100" />
+            <View1>
+              <DefaultTab>Profile</DefaultTab>
+              <Hints>
+                <Table />
+              </Hints>
+            </View1>
+            <View2 />
+          </Layout>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxBrowseV2" />
+    </Node>
+    <Node ToolID="11">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.AlteryxSelect.AlteryxSelect">
+        <Position x="462" y="258" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <OrderChanged value="False" />
+          <CommaDecimal value="False" />
+          <SelectFields>
+            <SelectField field="bond_yield" selected="True" type="FixedDecimal" size="19.10" />
+            <SelectField field="*Unknown" selected="True" />
+          </SelectFields>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxSelect" />
+    </Node>
+  </Nodes>
+  <Connections>
+    <Connection>
+      <Origin ToolID="1" Connection="Output1" />
+      <Destination ToolID="2" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="1" Connection="Output5" />
+      <Destination ToolID="11" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="3" Connection="Output" />
+      <Destination ToolID="6" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="6" Connection="Output" />
+      <Destination ToolID="7" Connection="Input" />
+    </Connection>
+    <Connection name="#1">
+      <Origin ToolID="6" Connection="Output" />
+      <Destination ToolID="1" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="11" Connection="Output" />
+      <Destination ToolID="4" Connection="Input" />
+    </Connection>
+  </Connections>
+  <Properties>
+    <Memory default="True" />
+    <GlobalRecordLimit value="0" />
+    <TempFiles default="True" />
+    <Annotation on="True" includeToolName="False" />
+    <ConvErrorLimit value="10" />
+    <ConvErrorLimit_Stop value="False" />
+    <CancelOnError value="False" />
+    <DisableBrowse value="False" />
+    <EnablePerformanceProfiling value="False" />
+    <DisableAllOutput value="False" />
+    <ShowAllMacroMessages value="False" />
+    <ShowConnectionStatusIsOn value="True" />
+    <ShowConnectionStatusOnlyWhenRunning value="True" />
+    <ZoomLevel value="0" />
+    <LayoutType>Horizontal</LayoutType>
+    <MetaInfo>
+      <NameIsFileName value="True" />
+      <Name>simple bond_yield macro</Name>
+      <Description />
+      <RootToolName />
+      <ToolVersion />
+      <ToolInDb value="False" />
+      <CategoryName />
+      <SearchTags />
+      <Author />
+      <Company />
+      <Copyright />
+      <DescriptionLink actual="" displayed="" />
+      <Example>
+        <Description />
+        <File />
+      </Example>
+    </MetaInfo>
+    <Events>
+      <Enabled value="True" />
+    </Events>
+  </Properties>
+</AlteryxDocument>
