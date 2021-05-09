@@ -105,7 +105,7 @@ Output</DefaultAnnotationText>
         </Annotation>
         <MetaInfo connection="Output">
           <RecordInfo>
-            <Field name="redemption_value (Optional)" source="Formula: 100" type="Double" />
+            <Field name="redemption_value (Optional)" source="Formula: if isempty([redemption_value (Optional)]) then 100 else [redemption_value (Optional)] endif" type="Double" />
             <Field name="Convention (Optional)" size="2147483647" source="Formula: if isempty([Convention (Optional)]) then &quot;30/360&quot; else [Convention (Optional)] endif" type="V_String" />
             <Field name="Freq2 (Optional)" source="Formula: [Freq (Optional)]" type="Int16" />
             <Field name="Freq (Optional)" source="Formula: if isempty([Freq (Optional)]) then 2 else [Freq (Optional)] endif" type="Int16" />
@@ -253,7 +253,7 @@ Input</DefaultAnnotationText>
       <Properties>
         <Configuration>
           <FormulaFields>
-            <FormulaField expression="100" field="redemption_value (optional)" size="8" type="Double" />
+            <FormulaField expression="if isempty([redemption_value (Optional)]) then 100 else [redemption_value (Optional)] endif" field="redemption_value (optional)" size="8" type="Double" />
             <FormulaField expression="[price]/[redemption_value (optional)]" field="Price" size="8" type="Double" />
             <FormulaField expression="if isempty([Convention (Optional)]) then &quot;30/360&quot; else [Convention (Optional)] endif" field="Convention (Optional)" size="2147483647" type="V_String" />
             <FormulaField expression="if isempty([Freq (Optional)]) then 2 else [Freq (Optional)] endif" field="Freq (Optional)" size="2" type="Int16" />
@@ -262,14 +262,12 @@ Input</DefaultAnnotationText>
         </Configuration>
         <Annotation DisplayMode="0">
           <Name />
-          <DefaultAnnotationText>redemption_value (optional) = 100
-Price = [price]/[redemption_value (optional)]
-...</DefaultAnnotationText>
+          <DefaultAnnotationText>redemption_value (optional) = if isempty([redemption_value (Optional)]) then 100...</DefaultAnnotationText>
           <Left value="False" />
         </Annotation>
         <MetaInfo connection="Output">
           <RecordInfo>
-            <Field name="redemption_value (Optional)" source="Formula: 100" type="Double" />
+            <Field name="redemption_value (Optional)" source="Formula: if isempty([redemption_value (Optional)]) then 100 else [redemption_value (Optional)] endif" type="Double" />
             <Field name="Convention (Optional)" size="2147483647" source="Formula: if isempty([Convention (Optional)]) then &quot;30/360&quot; else [Convention (Optional)] endif" type="V_String" />
             <Field name="Freq2 (Optional)" source="Formula: [Freq (Optional)]" type="Int16" />
             <Field name="Freq (Optional)" source="Formula: if isempty([Freq (Optional)]) then 2 else [Freq (Optional)] endif" type="Int16" />
@@ -374,7 +372,7 @@ Price = [price]/[redemption_value (optional)]
             <Field name="Price" source="Formula: [price]/[redemption_value (optional)]" type="Double" />
             <Field name="Convention (Optional)" size="2147483647" source="Formula: if isempty([Convention (Optional)]) then &quot;30/360&quot; else [Convention (Optional)] endif" type="V_String" />
             <Field name="Freq2 (Optional)" source="Formula: [Freq (Optional)]" type="Int16" />
-            <Field name="redemption_value (Optional)" source="Formula: 100" type="Double" />
+            <Field name="redemption_value (Optional)" source="Formula: if isempty([redemption_value (Optional)]) then 100 else [redemption_value (Optional)] endif" type="Double" />
           </RecordInfo>
         </MetaInfo>
       </Properties>
