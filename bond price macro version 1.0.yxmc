@@ -8,21 +8,19 @@
       <Properties>
         <Configuration>
           <RScript><![CDATA[
-
-#read data into R tool
-data<-read.Alteryx("#1",mode="data.frame")
-
-
 library(jrvFinance)
+
+
+data <- read.Alteryx("#1", mode="data.frame")
 
 
 
 #output data back into Alteryx
-yield_column <-ncol(data)+1
+price_column <-ncol(data)+1
 for (i in 1:nrow(data)) {
-new<- bond.yield(settle=data[i,1],mature=data[i,2],coupon=data[i,3],freq=data[i,4],price=data[i,5],convention=as.character(data[i,6]),redemption_value=data[i,8])
-data[i,yield_column]<- new
-colnames(data)[ncol(data)] <-paste0("bond_yield")
+new<- bond.price(settle=data[i,1],mature=data[i,2],coupon=data[i,3],freq=data[i,4],yield=data[i,5],convention=as.character(data[i,6]),redemption_value=data[i,8])
+data[i,price_column]<- new
+colnames(data)[ncol(data)] <-paste0("bond_price")
 }
 
 write.Alteryx(data,5)]]></RScript>
@@ -39,11 +37,11 @@ write.Alteryx(data,5)]]></RScript>
             <Field name="Mature" size="1073741823" source="R-DATA:" type="V_WString" />
             <Field name="Coupon" source="R-DATA:" type="Double" />
             <Field name="Freq..Optional." source="R-DATA:" type="Int32" />
-            <Field name="Price" source="R-DATA:" type="Double" />
+            <Field name="Yield" source="R-DATA:" type="Double" />
             <Field name="Convention..Optional." size="1073741823" source="R-DATA:" type="V_WString" />
             <Field name="Freq2..Optional." source="R-DATA:" type="Int32" />
             <Field name="redemption_value..Optional." source="R-DATA:" type="Double" />
-            <Field name="bond_yield" source="R-DATA:" type="Double" />
+            <Field name="bond_price" source="R-DATA:" type="Double" />
           </RecordInfo>
         </MetaInfo>
       </Properties>
@@ -99,45 +97,11 @@ Output</DefaultAnnotationText>
             <Field name="Settle" size="10" source="Formula: tostring([_currentfield_])" type="V_String" />
             <Field name="Mature" size="10" source="Formula: tostring([_currentfield_])" type="V_String" />
             <Field name="Coupon" source="TextInput:" type="Double" />
-            <Field name="Price" source="Formula: [price]/[redemption_value (optional)]" type="Double" />
+            <Field name="Yield" source="TextInput:" type="Double" />
           </RecordInfo>
         </MetaInfo>
       </Properties>
       <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxMultiFieldFormula" />
-    </Node>
-    <Node ToolID="11">
-      <GuiSettings Plugin="AlteryxBasePluginsGui.AlteryxSelect.AlteryxSelect">
-        <Position x="1062" y="102" />
-      </GuiSettings>
-      <Properties>
-        <Configuration>
-          <OrderChanged value="False" />
-          <CommaDecimal value="False" />
-          <SelectFields>
-            <SelectField field="bond_yield" selected="True" type="FixedDecimal" size="19.10" />
-            <SelectField field="*Unknown" selected="True" />
-          </SelectFields>
-        </Configuration>
-        <Annotation DisplayMode="0">
-          <Name />
-          <DefaultAnnotationText />
-          <Left value="False" />
-        </Annotation>
-        <MetaInfo connection="Output">
-          <RecordInfo>
-            <Field name="Settle" size="1073741823" source="R-DATA:" type="V_WString" />
-            <Field name="Mature" size="1073741823" source="R-DATA:" type="V_WString" />
-            <Field name="Coupon" source="R-DATA:" type="Double" />
-            <Field name="Freq..Optional." source="R-DATA:" type="Int32" />
-            <Field name="Price" source="R-DATA:" type="Double" />
-            <Field name="Convention..Optional." size="1073741823" source="R-DATA:" type="V_WString" />
-            <Field name="Freq2..Optional." source="R-DATA:" type="Int32" />
-            <Field name="redemption_value..Optional." source="R-DATA:" type="Double" />
-            <Field name="bond_yield" scale="10" size="19" source="R-DATA:" type="FixedDecimal" />
-          </RecordInfo>
-        </MetaInfo>
-      </Properties>
-      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxSelect" />
     </Node>
     <Node ToolID="12">
       <GuiSettings Plugin="AlteryxGuiToolkit.Questions.Tab.Tab">
@@ -171,7 +135,7 @@ Output</DefaultAnnotationText>
                 <Field name="Mature" />
                 <Field name="Coupon" />
                 <Field name="Freq (Optional)" />
-                <Field name="Price" />
+                <Field name="Yield" />
                 <Field name="Convention (Optional)" />
                 <Field name="Freq2 (Optional)" />
                 <Field name="redemption_value (Optional)" />
@@ -182,7 +146,7 @@ Output</DefaultAnnotationText>
                   <c>2022-01-01</c>
                   <c>0.08</c>
                   <c>2</c>
-                  <c>95</c>
+                  <c>.08</c>
                   <c>30/360</c>
                   <c>2</c>
                   <c>100</c>
@@ -192,7 +156,7 @@ Output</DefaultAnnotationText>
                   <c>2022-01-01</c>
                   <c>0.08</c>
                   <c>2</c>
-                  <c>36</c>
+                  <c>.08</c>
                   <c>30/360</c>
                   <c>2</c>
                   <c>100</c>
@@ -202,7 +166,7 @@ Output</DefaultAnnotationText>
                   <c>2024-03-15</c>
                   <c>0.02375</c>
                   <c>2</c>
-                  <c>88.017574</c>
+                  <c>.08</c>
                   <c>30/360</c>
                   <c>2</c>
                   <c>100</c>
@@ -224,7 +188,7 @@ Input</DefaultAnnotationText>
             <Field name="Mature" source="TextInput:" type="Date" />
             <Field name="Coupon" source="TextInput:" type="Double" />
             <Field name="Freq (Optional)" source="TextInput:" type="Byte" />
-            <Field name="Price" source="TextInput:" type="Double" />
+            <Field name="Yield" source="TextInput:" type="Double" />
             <Field name="Convention (Optional)" size="6" source="TextInput:" type="String" />
             <Field name="Freq2 (Optional)" source="TextInput:" type="Byte" />
             <Field name="redemption_value (Optional)" source="TextInput:" type="Byte" />
@@ -241,7 +205,6 @@ Input</DefaultAnnotationText>
         <Configuration>
           <FormulaFields>
             <FormulaField expression="if isempty([redemption_value (Optional)]) then 100 else [redemption_value (Optional)] endif" field="redemption_value (optional)" size="8" type="Double" />
-            <FormulaField expression="[price]/[redemption_value (optional)]" field="Price" size="8" type="Double" />
             <FormulaField expression="if isempty([Convention (Optional)]) then &quot;30/360&quot; else [Convention (Optional)] endif" field="Convention (Optional)" size="2147483647" type="V_String" />
             <FormulaField expression="if isempty([Freq (Optional)]) then 2 else [Freq (Optional)] endif" field="Freq (Optional)" size="2" type="Int16" />
             <FormulaField expression="[Freq (Optional)]" field="Freq2 (Optional)" size="2" type="Int16" />
@@ -261,7 +224,7 @@ Input</DefaultAnnotationText>
             <Field name="Settle" source="TextInput:" type="Date" />
             <Field name="Mature" source="TextInput:" type="Date" />
             <Field name="Coupon" source="TextInput:" type="Double" />
-            <Field name="Price" source="Formula: [price]/[redemption_value (optional)]" type="Double" />
+            <Field name="Yield" source="TextInput:" type="Double" />
           </RecordInfo>
         </MetaInfo>
       </Properties>
@@ -290,7 +253,7 @@ Input</DefaultAnnotationText>
             <Field name="Settle" source="TextInput:" type="Date" />
             <Field name="Mature" source="TextInput:" type="Date" />
             <Field name="Coupon" source="TextInput:" type="Double" />
-            <Field name="Price" source="TextInput:" type="Double" />
+            <Field name="Yield" source="TextInput:" type="Double" />
           </RecordInfo>
         </MetaInfo>
       </Properties>
@@ -318,7 +281,7 @@ Input</DefaultAnnotationText>
             <Field name="Settle" source="TextInput:" type="Date" />
             <Field name="Mature" source="TextInput:" type="Date" />
             <Field name="Coupon" source="TextInput:" type="Double" />
-            <Field name="Price" source="TextInput:" type="Double" />
+            <Field name="Yield" source="TextInput:" type="Double" />
             <Field name="redemption_value (Optional)" source="TextInput:" type="Byte" />
           </RecordInfo>
         </MetaInfo>
@@ -338,7 +301,8 @@ Input</DefaultAnnotationText>
             <SelectField field="Mature" selected="True" />
             <SelectField field="Coupon" selected="True" />
             <SelectField field="Freq (Optional)" selected="True" />
-            <SelectField field="Price" selected="True" />
+            <SelectField field="Yield" selected="True" />
+            <SelectField field="Price" selected="False" />
             <SelectField field="Convention (Optional)" selected="True" />
             <SelectField field="Freq2 (Optional)" selected="True" />
             <SelectField field="redemption_value (Optional)" selected="True" />
@@ -356,7 +320,7 @@ Input</DefaultAnnotationText>
             <Field name="Mature" size="10" source="Formula: tostring([_currentfield_])" type="V_String" />
             <Field name="Coupon" source="TextInput:" type="Double" />
             <Field name="Freq (Optional)" source="Formula: if isempty([Freq (Optional)]) then 2 else [Freq (Optional)] endif" type="Int16" />
-            <Field name="Price" source="Formula: [price]/[redemption_value (optional)]" type="Double" />
+            <Field name="Yield" source="TextInput:" type="Double" />
             <Field name="Convention (Optional)" size="2147483647" source="Formula: if isempty([Convention (Optional)]) then &quot;30/360&quot; else [Convention (Optional)] endif" type="V_String" />
             <Field name="Freq2 (Optional)" source="Formula: [Freq (Optional)]" type="Int16" />
             <Field name="redemption_value (Optional)" source="Formula: if isempty([redemption_value (Optional)]) then 100 else [redemption_value (Optional)] endif" type="Double" />
@@ -386,7 +350,7 @@ Input</DefaultAnnotationText>
             <Field name="Settle" source="TextInput:" type="Date" />
             <Field name="Mature" source="TextInput:" type="Date" />
             <Field name="Coupon" source="TextInput:" type="Double" />
-            <Field name="Price" source="TextInput:" type="Double" />
+            <Field name="Yield" source="TextInput:" type="Double" />
             <Field name="Convention (Optional)" size="6" source="TextInput:" type="String" />
             <Field name="redemption_value (Optional)" source="TextInput:" type="Byte" />
           </RecordInfo>
@@ -414,7 +378,7 @@ Input</DefaultAnnotationText>
             <Field name="Settle" source="TextInput:" type="Date" />
             <Field name="Mature" source="TextInput:" type="Date" />
             <Field name="Coupon" source="TextInput:" type="Double" />
-            <Field name="Price" source="TextInput:" type="Double" />
+            <Field name="Yield" source="TextInput:" type="Double" />
             <Field name="Convention (Optional)" size="6" source="TextInput:" type="String" />
             <Field name="Freq2 (Optional)" source="TextInput:" type="Byte" />
             <Field name="redemption_value (Optional)" source="TextInput:" type="Byte" />
@@ -423,19 +387,47 @@ Input</DefaultAnnotationText>
       </Properties>
       <EngineSettings Macro="CReW_EnsureFields.yxmc" />
     </Node>
+    <Node ToolID="23">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.BrowseV2.BrowseV2">
+        <Position x="1062" y="222" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <TempFile>C:\Users\micha\AppData\Local\Temp\Engine_16160_78bc581ac5a24bbf9da2a1bdcc28f251_\Engine_31540_600b4e30964d47df91ad4e5a12b6bc21_.yxdb</TempFile>
+          <TempFileDataProfiling />
+          <Layout>
+            <ViewMode>Single</ViewMode>
+            <ViewSize value="100" />
+            <View1>
+              <DefaultTab>Profile</DefaultTab>
+              <Hints>
+                <Table />
+              </Hints>
+            </View1>
+            <View2 />
+          </Layout>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxBrowseV2" />
+    </Node>
   </Nodes>
   <Connections>
     <Connection>
       <Origin ToolID="1" Connection="Output5" />
-      <Destination ToolID="11" Connection="Input" />
+      <Destination ToolID="4" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="1" Connection="Output5" />
+      <Destination ToolID="23" Connection="Input" />
     </Connection>
     <Connection>
       <Origin ToolID="6" Connection="Output" />
       <Destination ToolID="20" Connection="Input" />
-    </Connection>
-    <Connection>
-      <Origin ToolID="11" Connection="Output" />
-      <Destination ToolID="4" Connection="Input" />
     </Connection>
     <Connection>
       <Origin ToolID="14" Connection="Output" />
@@ -498,7 +490,7 @@ Input</DefaultAnnotationText>
     </Constants>
     <MetaInfo>
       <NameIsFileName value="True" />
-      <Name>bond_yield macro updated 5102021</Name>
+      <Name>bond price macro version 1.0</Name>
       <Description />
       <RootToolName />
       <ToolVersion />
@@ -557,6 +549,7 @@ Input</DefaultAnnotationText>
         <Tool ToolId="19" Selected="True" />
         <Tool ToolId="21" Selected="True" />
         <Tool ToolId="22" Selected="True" />
+        <Tool ToolId="23" Selected="False" />
       </Wiz_OpenOutputTools>
       <Wiz_OutputMessage />
       <Wiz_NoOutputFilesMessage />
