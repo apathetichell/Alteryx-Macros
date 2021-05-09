@@ -10,4 +10,4 @@ Spatial adjuster is a macro which takes in one spatial field and returns the com
 
 ST Dev/DOF macro - takes in one numeric field and various user-desginated inputs most notably Degrees of Freedom and returns at Standard Deviation value. Most notable for providing Standard Deviation of a Sample currently not readily available in Alteryx off-the-shelf tools.
 
-Bond yield macro - please contact me with any questions. 
+Bond yield macro - please contact me with any questions. Update on 5/9/2021 to allow for optional fields, non-100 par based pricing and checks for jvrFinance's installation on the system.
