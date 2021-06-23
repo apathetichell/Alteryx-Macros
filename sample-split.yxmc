@@ -1,0 +1,492 @@
+<?xml version="1.0"?>
+<AlteryxDocument yxmdVer="2021.1">
+  <Nodes>
+    <Node ToolID="1">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.MacroInput.MacroInput">
+        <Position x="54" y="246" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <UseFileInput value="True" />
+          <Name>DATA</Name>
+          <Abbrev />
+          <ShowFieldMap value="False" />
+          <Optional value="True" />
+          <FileInput>
+            <Configuration>
+              <Passwords />
+              <File RecordLimit="" SearchSubDirs="False" FileFormat="0" OutputFileName="">C:\Users\micha\Downloads\quality.csv</File>
+              <FormatSpecificOptions>
+                <HeaderRow>True</HeaderRow>
+                <IgnoreErrors>False</IgnoreErrors>
+                <AllowShareWrite>False</AllowShareWrite>
+                <ImportLine>1</ImportLine>
+                <FieldLen>254</FieldLen>
+                <SingleThreadRead>False</SingleThreadRead>
+                <IgnoreQuotes>DoubleQuotes</IgnoreQuotes>
+                <Delimeter>,</Delimeter>
+                <QuoteRecordBreak>False</QuoteRecordBreak>
+                <CodePage>28591</CodePage>
+              </FormatSpecificOptions>
+            </Configuration>
+          </FileInput>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <AnnotationText>The Data</AnnotationText>
+          <DefaultAnnotationText>quality.csv</DefaultAnnotationText>
+          <Left value="True" />
+        </Annotation>
+        <Dependencies>
+          <Implicit />
+        </Dependencies>
+        <MetaInfo connection="Output">
+          <RecordInfo>
+            <Field name="MemberID" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="InpatientDays" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="ERVisits" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="OfficeVisits" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="Narcotics" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="DaysSinceLastERVisit" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="Pain" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="TotalVisits" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="ProviderCount" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="MedicalClaims" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="ClaimLines" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="StartedOnCombination" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="AcuteDrugGapSmall" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+            <Field name="PoorCare" size="254" source="File: C:\Users\micha\Downloads\quality.csv" type="V_String" />
+          </RecordInfo>
+        </MetaInfo>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxMacroInput" />
+    </Node>
+    <Node ToolID="15">
+      <GuiSettings Plugin="AlteryxRPluginGui.R">
+        <Position x="510" y="270" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <RScript><![CDATA[library(caTools)
+
+data<-read.Alteryx("#2", mode="data.frame")
+variables <-read.Alteryx("#1", mode="list")
+
+
+set.seed(variables[[1]])
+
+sample.ratio<-variables[[2]]
+
+spl=sample.split(data$PoorCare,SplitRatio=sample.ratio)
+data_tran <-subset(data,spl==TRUE)
+data_test <-subset(data,spl==FALSE)
+
+
+
+write.Alteryx(data_tran,1)
+write.Alteryx(data_test,2)
+]]></RScript>
+          <UseFullUpdate value="False" />
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+        <MetaInfo connection="Output1">
+          <RecordInfo>
+            <Field name="MemberID" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="InpatientDays" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="ERVisits" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="OfficeVisits" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="Narcotics" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="DaysSinceLastERVisit" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="Pain" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="TotalVisits" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="ProviderCount" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="MedicalClaims" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="ClaimLines" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="StartedOnCombination" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="AcuteDrugGapSmall" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="PoorCare" size="1073741823" source="R-DATA:" type="V_WString" />
+          </RecordInfo>
+        </MetaInfo>
+        <MetaInfo connection="Output2">
+          <RecordInfo>
+            <Field name="MemberID" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="InpatientDays" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="ERVisits" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="OfficeVisits" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="Narcotics" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="DaysSinceLastERVisit" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="Pain" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="TotalVisits" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="ProviderCount" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="MedicalClaims" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="ClaimLines" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="StartedOnCombination" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="AcuteDrugGapSmall" size="1073741823" source="R-DATA:" type="V_WString" />
+            <Field name="PoorCare" size="1073741823" source="R-DATA:" type="V_WString" />
+          </RecordInfo>
+        </MetaInfo>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxRPluginEngine.dll" EngineDllEntryPoint="AlteryxR" />
+    </Node>
+    <Node ToolID="21">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.MacroOutput.MacroOutput">
+        <Position x="618" y="210" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <Name>Output21</Name>
+          <Abbrev />
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText>Output</DefaultAnnotationText>
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxMacroOutput" />
+    </Node>
+    <Node ToolID="22">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.MacroOutput.MacroOutput">
+        <Position x="642" y="270" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <Name>Output22</Name>
+          <Abbrev />
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText>Output</DefaultAnnotationText>
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxMacroOutput" />
+    </Node>
+    <Node ToolID="23">
+      <GuiSettings Plugin="AlteryxGuiToolkit.Questions.Tab.Tab">
+        <Position x="0" y="0" width="59" height="59" />
+      </GuiSettings>
+      <Properties>
+        <Configuration />
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+    </Node>
+    <Node ToolID="36">
+      <GuiSettings Plugin="AlteryxGuiToolkit.Action.Action">
+        <Position x="414" y="234" width="59" height="59" />
+      </GuiSettings>
+      <Properties>
+        <Configuration />
+        <Annotation DisplayMode="0">
+          <Name>Indie Variable</Name>
+          <AnnotationText>Independent Variable</AnnotationText>
+          <DefaultAnnotationText>Indie Variable</DefaultAnnotationText>
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+    </Node>
+    <Node ToolID="37">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.MacroInput.MacroInput">
+        <Position x="90" y="150" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <UseFileInput value="False" />
+          <Name>parametermap</Name>
+          <Abbrev />
+          <ShowFieldMap value="True" />
+          <Optional value="False" />
+          <TextInput>
+            <Configuration>
+              <NumRows value="1" />
+              <Fields>
+                <Field name="setseed" />
+                <Field name="sampleratio" />
+              </Fields>
+              <Data>
+                <r>
+                  <c>88</c>
+                  <c>.75</c>
+                </r>
+              </Data>
+            </Configuration>
+          </TextInput>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name>parameters...</Name>
+          <AnnotationText>samples split and set seed input</AnnotationText>
+          <DefaultAnnotationText>The variables except the Indie Variable...
+Input</DefaultAnnotationText>
+          <Left value="True" />
+        </Annotation>
+        <MetaInfo connection="Output">
+          <RecordInfo>
+            <Field name="setseed" source="TextInput:" type="Byte" />
+            <Field name="sampleratio" source="TextInput:" type="Double" />
+          </RecordInfo>
+        </MetaInfo>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxMacroInput" />
+    </Node>
+    <Node ToolID="42">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.CrossTab.CrossTab">
+        <Position x="318" y="342" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <GroupFields />
+          <HeaderField field="Name" />
+          <DataField field="Type" />
+          <Methods>
+            <Method method="First" />
+            <Separator>,</Separator>
+            <FieldSize value="2048" />
+          </Methods>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+        <MetaInfo connection="Output">
+          <RecordInfo>
+            <Field name="AcuteDrugGapSmall" size="8" source="FieldInfo" type="String" />
+            <Field name="ClaimLines" size="8" source="FieldInfo" type="String" />
+            <Field name="DaysSinceLastERVisit" size="8" source="FieldInfo" type="String" />
+            <Field name="ERVisits" size="8" source="FieldInfo" type="String" />
+            <Field name="InpatientDays" size="8" source="FieldInfo" type="String" />
+            <Field name="MedicalClaims" size="8" source="FieldInfo" type="String" />
+            <Field name="MemberID" size="8" source="FieldInfo" type="String" />
+            <Field name="Narcotics" size="8" source="FieldInfo" type="String" />
+            <Field name="OfficeVisits" size="8" source="FieldInfo" type="String" />
+            <Field name="Pain" size="8" source="FieldInfo" type="String" />
+            <Field name="PoorCare" size="8" source="FieldInfo" type="String" />
+            <Field name="ProviderCount" size="8" source="FieldInfo" type="String" />
+            <Field name="StartedOnCombination" size="8" source="FieldInfo" type="String" />
+            <Field name="TotalVisits" size="8" source="FieldInfo" type="String" />
+          </RecordInfo>
+          <SortInfo>
+          </SortInfo>
+        </MetaInfo>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxCrossTab" />
+    </Node>
+    <Node ToolID="43">
+      <GuiSettings Plugin="AlteryxGuiToolkit.Questions.DropDownListBox.DropDown">
+        <Position x="330" y="138" width="59" height="59" />
+      </GuiSettings>
+      <Properties>
+        <Configuration />
+        <Annotation DisplayMode="0">
+          <Name />
+          <AnnotationText>Dependent variable selector</AnnotationText>
+          <DefaultAnnotationText>Drop Down (43)</DefaultAnnotationText>
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+    </Node>
+    <Node ToolID="44">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.FieldInfo.FieldInfo">
+        <Position x="126" y="318" />
+      </GuiSettings>
+      <Properties>
+        <Configuration />
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+        <MetaInfo connection="Output">
+          <RecordInfo>
+            <Field name="Name" size="20" source="FieldInfo" type="V_String" />
+            <Field name="Type" size="8" source="FieldInfo" type="String" />
+            <Field name="Size" source="FieldInfo" type="Int32" />
+            <Field name="Scale" source="FieldInfo" type="Int32" />
+            <Field name="Source" size="42" source="FieldInfo" type="V_WString" />
+            <Field name="Description" size="1" source="FieldInfo" type="V_WString" />
+          </RecordInfo>
+        </MetaInfo>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxFieldInfo" />
+    </Node>
+  </Nodes>
+  <Connections>
+    <Connection name="#2">
+      <Origin ToolID="1" Connection="Output" />
+      <Destination ToolID="15" Connection="Input" />
+    </Connection>
+    <Connection name="#3">
+      <Origin ToolID="36" Connection="Action" />
+      <Destination ToolID="15" Connection="Action" />
+    </Connection>
+    <Connection name="#1">
+      <Origin ToolID="37" Connection="Output" />
+      <Destination ToolID="15" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="1" Connection="Output" />
+      <Destination ToolID="44" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="15" Connection="Output1" />
+      <Destination ToolID="21" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="15" Connection="Output2" />
+      <Destination ToolID="22" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="42" Connection="Output" />
+      <Destination ToolID="43" Connection="Question Input" />
+    </Connection>
+    <Connection name="#1">
+      <Origin ToolID="43" Connection="Question" />
+      <Destination ToolID="36" Connection="Question" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="44" Connection="Output" />
+      <Destination ToolID="42" Connection="Input" />
+    </Connection>
+  </Connections>
+  <Properties>
+    <Memory default="True" />
+    <GlobalRecordLimit value="0" />
+    <TempFiles default="True" />
+    <Annotation on="True" includeToolName="False" />
+    <ConvErrorLimit value="10" />
+    <ConvErrorLimit_Stop value="False" />
+    <CancelOnError value="False" />
+    <DisableBrowse value="False" />
+    <EnablePerformanceProfiling value="False" />
+    <DisableAllOutput value="False" />
+    <ShowAllMacroMessages value="False" />
+    <ShowConnectionStatusIsOn value="True" />
+    <ShowConnectionStatusOnlyWhenRunning value="True" />
+    <ZoomLevel value="0" />
+    <LayoutType>Horizontal</LayoutType>
+    <Constants>
+      <Constant>
+        <Namespace>Question</Namespace>
+        <Name>Drop Down (43)</Name>
+        <Value />
+        <IsNumeric value="False" />
+      </Constant>
+    </Constants>
+    <MetaInfo>
+      <NameIsFileName value="True" />
+      <Name>sample-split</Name>
+      <Description />
+      <RootToolName />
+      <ToolVersion />
+      <ToolInDb value="False" />
+      <CategoryName />
+      <SearchTags />
+      <Author />
+      <Company />
+      <Copyright />
+      <DescriptionLink actual="" displayed="" />
+      <Example>
+        <Description />
+        <File />
+      </Example>
+    </MetaInfo>
+    <Events>
+      <Enabled value="False" />
+    </Events>
+    <RuntimeProperties>
+      <Actions>
+        <NoCondition>
+          <Type>NoCondition</Type>
+          <Description>(Always Run)</Description>
+          <True>
+            <Action>
+              <Type>UpdateValue</Type>
+              <Description />
+              <ToolId value="36" />
+              <Mode>Simple</Mode>
+              <Variable />
+              <Replace value="True" />
+              <ReplaceText>PoorCare</ReplaceText>
+              <Destination>15/RScript</Destination>
+            </Action>
+          </True>
+        </NoCondition>
+      </Actions>
+      <Questions>
+        <Question>
+          <Type>Tab</Type>
+          <Description>Questions</Description>
+          <Name>Tab (23)</Name>
+          <ToolId value="23" />
+          <Questions>
+            <Question>
+              <Type>MacroOutput</Type>
+              <Description />
+              <Name>Macro Output (21)</Name>
+              <ToolId value="21" />
+            </Question>
+            <Question>
+              <Type>MacroOutput</Type>
+              <Description />
+              <Name>Macro Output (22)</Name>
+              <ToolId value="22" />
+            </Question>
+            <Question>
+              <Type>MacroInput</Type>
+              <Description />
+              <Name>Macro Input (1)</Name>
+              <ToolId value="1" />
+            </Question>
+            <Question>
+              <Type>MacroInput</Type>
+              <Description />
+              <Name>parameters...</Name>
+              <ToolId value="37" />
+            </Question>
+            <Question>
+              <Type>ListBox</Type>
+              <Description>Drop Down (43)</Description>
+              <Name>Drop Down (43)</Name>
+              <ToolId value="43" />
+              <Multiple value="False" />
+              <Default />
+              <Mode>Field</Mode>
+              <Field_ToolId value="42" />
+              <Field_ConnectionName />
+              <Field_Connection>Output</Field_Connection>
+              <Field_IsOutput value="True" />
+              <Field_IncludeNone value="False" />
+              <Field_FilterTypes>Bool,Byte,Int16,Int32,Int64,FixedDecimal,Float,Double,String,WString,V_String,V_WString,Date,Time,DateTime,Blob,SpatialObj</Field_FilterTypes>
+            </Question>
+          </Questions>
+        </Question>
+      </Questions>
+      <ModuleType>Macro</ModuleType>
+      <MacroCustomHelp value="False" />
+      <MacroDynamicOutputFields value="False" />
+      <MacroImageStd value="39" />
+      <MacroInputs />
+      <MacroOutputs />
+      <Wiz_CustomHelp value="False" />
+      <Wiz_CustomGraphic value="False" />
+      <Wiz_ShowOutput value="True" />
+      <Wiz_OpenOutputTools>
+        <Tool ToolId="1" Selected="True" />
+        <Tool ToolId="21" Selected="True" />
+        <Tool ToolId="22" Selected="True" />
+        <Tool ToolId="37" Selected="True" />
+      </Wiz_OpenOutputTools>
+      <Wiz_OutputMessage />
+      <Wiz_NoOutputFilesMessage />
+      <Wiz_ChainRunWizard />
+    </RuntimeProperties>
+  </Properties>
+</AlteryxDocument>
